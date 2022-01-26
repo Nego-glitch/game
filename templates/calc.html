@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+</head>
+<body>
+
+<h1>
+    By multiplying {{var1}} and {{var2}} you get {{sum}}.
+</h1>
+
+{#<form action="http://negone.pythonanywhere.com/calculator" method="POST">#}
+{#    <input type="number" id="var1" name="Variable1">#}
+{#    <input type="number" id="var2" name="Variable2">#}
+{#    <input type="submit" value="Calculate" id="Calculatebtn">#}
+{#</form>#}
+
+<form action="/calculator" method="POST">
+    <input type="number" id="var1" name="Variable1">
+    <input type="number" id="var2" name="Variable2">
+    <input type="submit" value="Calculate" id="Calculatebtn">
+</form>
+
+<p>
+    <a href="/">Back to menu</a>
+</p>
+
+
+{#<script type="text/javascript">#}
+{#    document.getElementById("Calculatebtn").onclick =#}
+{#        function () {#}
+{#            location.href = "http://negone.pythonanywhere.com/calculator";#}
+            {#let count1 = document.querySelector("#var1").value;#}
+            {#let count2 = document.querySelector("#var2").value;#}
+            {##}
+            {#let sum = count1 * count2;#}
+{#        };#}
+{#</script>#}
+
+</body>
+</html>
