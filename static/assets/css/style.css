@@ -1,0 +1,38 @@
+body {
+    background-color: white;
+}
+
+h1 {
+    color: black;
+}
+
+button {
+    border-width: thin;
+}
+
+form {
+    display: table;
+    margin: auto;
+}
+
+/*input {*/
+/*    width: 104px;*/
+/*    height: 104px;*/
+/*    font-size: medium;*/
+/*}*/
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+}
+
+.card-name {
+    position: relative;
+    top: 45%;
+}

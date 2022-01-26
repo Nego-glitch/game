@@ -1,44 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link rel="stylesheet" href="/static/style.css">-->
+    <link rel="stylesheet" href="/static/assets/css/style.css">
     <!--<link rel="stylesheet" href="https://www.w3schools.com/html/styles.css">-->
-
-    <style>
-        body {
-            background-color: white;
-        }
-
-        h1 {
-            color: black;
-        }
-
-        button {
-            border-width: thin;
-        }
-
-        form {
-            display: table;
-            margin: auto;
-        }
-
-        input {
-            width: 104px;
-            height: 104px;
-            font-size: medium;
-        }
-    </style>
     <title>Guessing game</title>
 </head>
 
 <body>
 
-<form action="http://negone.pythonanywhere.com/guessinggame" method="POST">
+<form action="/guessinggame/registerresult" method="POST">
     <div>
         <span id="minute">00</span>:<span id="second">00</span>:<span id="millisecond">000</span>
+        <div id="submitResultButtonContainer"></div>
     </div>
 
     <br/>
@@ -50,269 +25,11 @@
 
 <div id="tableParent"></div>
 
-<script type="text/javascript">
-
-    var shuffledPairs = [];
-    var pairs = [];
-
-    var isFirstClick = true;
-    var firstIdClicked = null;
-    var firstIdIndex = -1;
-
-    let minute = 0;
-    let second = 0;
-    let millisecond = 0;
-
-    let cron;
-
-    function start() {
-        cron = setInterval(() => {
-            timer();
-        }, 10);
-    }
-
-    function reset() {
-        minute = 0;
-        second = 0;
-        millisecond = 0;
-        document.getElementById('minute').innerText = '00';
-        document.getElementById('second').innerText = '00';
-        document.getElementById('millisecond').innerText = '000';
-    }
-
-    function stop() {
-        clearInterval(cron);
-    }
-
-    function timer() {
-        if ((millisecond += 10) == 1000) {
-            millisecond = 0;
-            second++;
-        }
-        if (second == 60) {
-            second = 0;
-            minute++;
-        }
-        document.getElementById('minute').innerText = returnData(minute);
-        document.getElementById('second').innerText = returnData(second);
-        document.getElementById('millisecond').innerText = returnData(millisecond);
-    }
-
-    function returnData(input) {
-        return input > 10 ? input : `0${input}`
-    }
-
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * max);
-    }
-
-    function getUnUsed(arrayToCheck, isNullFlag) {
-        while (true) {
-            let pos = getRandomInt(arrayToCheck.length);
-
-            if (!isNullFlag) {
-                if (arrayToCheck[pos] === null) {
-                    continue;
-                }
-            } else {
-                if (arrayToCheck[pos] !== null) {
-                    continue;
-                }
-            }
-
-            return pos;
-        }
-    }
-
-    function createShuffledPairs(fieldsToGenerate) {
-
-        let tempList = [];
-
-        console.log(pairs.length);
-
-        let pairsToUse = fieldsToGenerate / 2;
-
-        for (let i = 0; i < pairsToUse; i++) {
-            //get random position number
-
-            let posIndex = getUnUsed(pairs, false);
-
-            tempList.push(pairs[posIndex]);
-
-            pairs[posIndex] = null;
-        }
-
-        for (let n = 0; n < fieldsToGenerate; n++) {
-
-            shuffledPairs.push(null);
-        }
-
-        //place pairs in shuffledPairs Array
-        for (let n = 0; n < pairsToUse; n++) {
-
-            let posIndex = getUnUsed(shuffledPairs, true);
-
-            shuffledPairs[posIndex] = tempList[n];
-
-            let nextPosIndex = getUnUsed(shuffledPairs, true);
-
-            let secondPartOfThePair = {"pic": tempList[n].pic, "inform": tempList[n].inform, "showImage": false}
-
-            shuffledPairs[nextPosIndex] = secondPartOfThePair;
-        }
-    }
-
-    function markAsUnclicked(btn) {
-        btn.style.backgroundImage = "url('/static/assets/back2.png')";
-        //button.style.backgroundImage = "url('" + shuffledPairs[id].pic + "')";
-        btn.value = "";
-    }
-
-    function area() {
-
-        reset();
-
-        shuffledPairs = [];
-        pairs = [];
-
-        let pictures = ['/static/assets/arctic.png', "/static/assets/black.png", //\
-            "/static/assets/blue.png", "/static/assets/gray.png",
-            "/static/assets/green.png", "/static/assets/hot_pink.png",
-            "/static/assets/kelly.png", "/static/assets/lavender.png",
-            "/static/assets/lilac.png", "/static/assets/maroon.png",
-            "/static/assets/mint.png", "/static/assets/navy.png",
-            "/static/assets/olive.png", "/static/assets/orange.png",
-            "/static/assets/pewter.png", "/static/assets/red.png",
-            "/static/assets/rust.png", "/static/assets/teal.png",
-            "/static/assets/vanilla.png", "/static/assets/violet.png",
-            "/static/assets/white.png", "/static/assets/yellow.png"];
-        let inform = ["Arctic", "Black",
-            "Blue", "Gray",
-            "Green", "Hot pink",
-            "Kelly", "Lavender",
-            "Lilac", "Maroon",
-            "Mint", "Navy",
-            "Olive", "Orange",
-            "Pewter", "Red",
-            "Rust", "Teal",
-            "Vanilla", "Violet",
-            "White", "Yellow"];
-
-        for (let i = 0; i < pictures.length; i++) {
-            let pair = {"pic": pictures[i], "inform": inform[i], "showImage": true}
-            pairs.push(pair);
-        }
-
-        let count = document.querySelector("#size").value;
-        let table = document.createElement("form");
-
-        let fieldCount = count * count;
-
-        if (count % 2 !== 0) {
-            --fieldCount;
-        }
-
-        createShuffledPairs(fieldCount);
-
-        console.log(fieldCount);
-
-        let i = 0;
-
-        start();
-
-        for (let x = 0; x < count; x++) {
-
-            let row = document.createElement("div");
-
-            for (let y = 0; y < count; y++) {
-
-                if (i === fieldCount) {
-                    break;
-                }
-
-                let button = document.createElement("input");
-                button.type = "button";
-                button.id = "button_" + i;
-                markAsUnclicked(button);
-                row.appendChild(button);
-
-                button.onclick = function () {
-                    //button.value = x * count + y + 1;
-
-                    let res = button.id.split('_');
-
-                    let id = parseInt(res[1]);
-
-                    if (shuffledPairs[id].showImage) {
-                        button.style.backgroundImage = "url('" + shuffledPairs[id].pic + "')";
-                    } else {
-                        button.style.backgroundImage = null;
-                        button.style.backgroundColor = "rgba(243,239,225,0.84)";
-                        //button.append("<span>aaa</span>"); //= shuffledPairs[id].info;
-                        //button.append("<span>" + shuffledPairs[id].info + "</span>");
-                        button.value = shuffledPairs[id].inform; //makes the tile jump lower(Issue still unresolved / initial style issue)
-                    }
-
-                    if (isFirstClick) {
-                        firstIdClicked = button.id;
-                        firstIdIndex = id;
-                        isFirstClick = false;
-                    } else {
-
-                        //Need to create only two-click policy
-
-                        isFirstClick = true;
-
-                        if (shuffledPairs[id].inform !== shuffledPairs[firstIdIndex].inform) {
-                            //console.log("Close");
-                            isFirstClick = true;
-
-                            setTimeout(function () {
-                                markAsUnclicked(document.getElementById(firstIdClicked));
-                                markAsUnclicked(document.getElementById(button.id));
-
-                                //console.log(firstIdClicked + " " + button.id);
-                                //console.log(firstIdIndex);
-
-                                firstIdClicked = null;
-                                firstIdIndex = -1;
-                                button.value = null;
-                            }, 2000)
-
-                        }
-
-                        //button.disabled = true;
-
-                    }
-
-                }
-
-                //Need to create game-ender pop-up message and command that stops all action and restores to start state
-
-                //If pressed 'Generate area' it restarts the whole process, let's shuffledPairs.inform fork again
-
-                i++;
-
-            }
-
-            table.appendChild(row);
-        }
-
-        table.style.backgroundColor = "white";
-
-        document.getElementById('tableParent').innerHTML = '';
-
-        document.getElementById('tableParent').appendChild(table);
-
-    }
-
-</script>
-
 <p>
     <a href="/">Back to menu</a>
 </p>
 
+<script src="/static/assets/js/guessing-game.js"></script>
+
 </body>
 </html>
-
-git config --global user.name "Nego-glitch"
