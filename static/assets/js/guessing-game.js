@@ -38,6 +38,8 @@ function reset() {
     cardsDoNotMatch = false;
 
     document.getElementById('submitResultButtonContainer').innerHTML = '';
+
+    sessionStorage.setItem('amountOfPoints', '');
 }
 
 function stop() {
@@ -56,6 +58,19 @@ function timer() {
     document.getElementById('minute').innerText = returnData(minute);
     document.getElementById('second').innerText = returnData(second);
     document.getElementById('millisecond').innerText = returnData(millisecond);
+}
+
+function pointCalculation(fieldsUsed) {
+
+    document.getElementById('minute').innerText = minute;
+    document.getElementById('second').innerText = second;
+    //document.getElementById('millisecond').innerText = returnData(millisecond);
+
+    let time = parseInt(second) + parseInt(minute) * 60; //+ parseInt(millisecond)
+
+    let points = time / fieldsUsed;
+
+    return points;
 }
 
 function returnData(input) {
@@ -124,7 +139,7 @@ function area() {
 
     reset();
 
-    let pictures = ['/static/assets/arctic.png', '/static/assets/black.png',
+    let pictures = ['/static/arctic.png', '/static/assets/black.png',
         '/static/assets/blue.png', '/static/assets/gray.png',
         '/static/assets/green.png', '/static/assets/hot_pink.png',
         '/static/assets/kelly.png', '/static/assets/lavender.png',
@@ -188,7 +203,7 @@ function area() {
 
             button.onclick = function () {
 
-                if(cardsDoNotMatch) {
+                if (cardsDoNotMatch) {
                     return;
                 }
 
@@ -196,7 +211,7 @@ function area() {
 
                 let id = parseInt(res[1]);
 
-                if(matchedItems.indexOf(id) > -1) {
+                if (matchedItems.indexOf(id) > -1) {
                     return;
                 }
 
@@ -242,12 +257,16 @@ function area() {
                         matchedItems.push(id);
                         matchedItems.push(firstIdClicked);
 
-                        if(fieldCount == matchedItems.length) {
+                        if (fieldCount == matchedItems.length) {
                             stop();
+
+                            //pointCalculation(fieldCount);
 
                             const registerButton = document.createElement('button');
                             registerButton.innerHTML = 'Register result';
                             registerButton.type = 'submit';
+
+                            sessionStorage.setItem("amountOfPoints", pointCalculation(fieldCount));
 
                             document.getElementById('submitResultButtonContainer').appendChild(registerButton);
 

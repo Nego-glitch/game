@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scoreboard</title>
+</head>
+<body>
+
+<h1>
+    To submit your result, enter the nickname you want to save it under.
+</h1>
+
+<ol>
+    <!-- For loop logic of jinja template -->
+    {% for position in points %}
+
+        <li>{{ position[0] }} - {{ position[1] }}</li>
+    {% endfor %}
+</ol>
+
+{% if showInputs %}
+    <form action="/guessinggame/scoreboard" method="POST">
+        <label>Nickname: </label>
+        <input type="text" id="username" name="username">
+        <input type="hidden" id="points" name="points">
+
+        <input type="submit" value="Submit result">
+
+    </form>
+{% endif %}
+
+
+<script type="application/javascript">
+
+    let amountOfPoints = sessionStorage.getItem('amountOfPoints');
+
+    document.getElementById("points").value = amountOfPoints;
+    console.log(amountOfPoints);
+
+</script>
+
+<p>
+    <a href="/guessinggame">Back to game</a>
+</p>
+
+</body>
+</html>
